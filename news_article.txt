@@ -1,0 +1,12 @@
+"""
+pythonAssessment.py
+
+Performs various NLP-based text analysis tasks on a news article.
+
+Tasks:
+1. Count occurrences of a specific word
+2. Identify the most common word
+3. Calculate average word length
+4. Count number of paragraphs
+5. Count number of sentences
+"""
