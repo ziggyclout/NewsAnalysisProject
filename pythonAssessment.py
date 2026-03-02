@@ -2,36 +2,18 @@ import string
 import re
 from collections import Counter
 
-# File Handling
-
-def load_article(filename):
-    """Read the contents of a text file into a string."""
-    try:
-        with open(filename, "r", encoding="utf-8") as file:
-            return file.read()
-    except FileNotFoundError:
-        print("Error: File not found.")
-        return ""
-
-# Text Cleaning
-
-def clean_text(text):
-    """Remove punctuation and convert to lowercase."""
-    translator = str.maketrans("", "", string.punctuation)
-    return text.translate(translator).lower()
-
 # 1. Count Specific Word
 
 def count_specific_word(text, search_word):
-    """Count occurrences of a specific word. Edge case: return 0 if empty."""
-    if not text.strip():
+    """Count occurrences of a specific word. Returns 0 if empty."""
+    if not text.strip():  # conditional
         return 0
 
-    cleaned_text = clean_text(text)
+    cleaned_text = text.translate(str.maketrans("", "", string.punctuation)).lower()
     words = cleaned_text.split()
 
     count = 0
-    for word in words:  # explicit for loop
+    for word in words:  # for loop
         if word == search_word.lower():  # conditional
             count += 1
     return count
@@ -39,21 +21,20 @@ def count_specific_word(text, search_word):
 # 2. Identify Most Common Word
 
 def identify_most_common_word(text):
-    """Return the most common word. Edge case: None if empty."""
-    if not text.strip():
+    """Return the most common word. Returns None if empty."""
+    if not text.strip():  # conditional
         return None
 
-    cleaned_text = clean_text(text)
+    cleaned_text = text.translate(str.maketrans("", "", string.punctuation)).lower()
     words = cleaned_text.split()
 
     if not words:  # conditional
         return None
 
     word_counts = Counter(words)
-    # Using for loop to find the max manually (optional, shows for loop usage)
     most_common = None
     max_count = 0
-    for word, freq in word_counts.items():
+    for word, freq in word_counts.items():  # for loop
         if freq > max_count:  # conditional
             max_count = freq
             most_common = word
@@ -62,33 +43,31 @@ def identify_most_common_word(text):
 # 3. Calculate Average Word Length
 
 def calculate_average_word_length(text):
-    """Return average length of words. Edge case: return 0 if empty."""
-    if not text.strip():
+    """Calculate average word length. Returns 0 if empty."""
+    if not text.strip():  # conditional
         return 0
 
-    cleaned_text = clean_text(text)
+    cleaned_text = text.translate(str.maketrans("", "", string.punctuation)).lower()
     words = cleaned_text.split()
 
-    if not words:
+    if not words:  # conditional
         return 0
 
     total_length = 0
-    for word in words:  # explicit for loop
+    for word in words:  # for loop
         total_length += len(word)
     return total_length / len(words)
-
-
 
 # 4. Count Paragraphs
 
 def count_paragraphs(text):
-    """Count paragraphs separated by blank lines. Edge case: return 1 if empty."""
-    if not text.strip():
+    """Count paragraphs separated by empty lines. Returns 1 if empty."""
+    if not text.strip():  # conditional
         return 1
 
     paragraphs = text.split("\n\n")
     non_empty = []
-    for p in paragraphs:  # explicit for loop
+    for p in paragraphs:  # for loop
         if p.strip():  # conditional
             non_empty.append(p)
     return len(non_empty)
@@ -96,22 +75,27 @@ def count_paragraphs(text):
 # 5. Count Sentences
 
 def count_sentences(text):
-    """Count sentences ending with ., !, or ?. Edge case: return 1 if empty."""
-    if not text.strip():
+    """Count sentences ending with ., !, or ?. Returns 1 if empty."""
+    if not text.strip():  # conditional
         return 1
 
     sentences = re.split(r"[.!?]+", text)
     non_empty = []
-    for s in sentences:  # explicit for loop
+    for s in sentences:  # for loop
         if s.strip():  # conditional
             non_empty.append(s)
     return len(non_empty)
 
-# Main Program
+# Main program for user interaction
 
 def main():
     filename = "news_article.txt"
-    article_text = load_article(filename)
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            article_text = file.read()
+    except FileNotFoundError:
+        print("Error: news_article.txt not found.")
+        return
 
     print("\n==============================")
     print("   NEWS ARTICLE ANALYSIS")
@@ -125,24 +109,14 @@ def main():
         count = count_specific_word(article_text, search_word)
         print(f"The word '{search_word}' appears {count} time(s).\n")
 
-    # Most common word
-    common_word = identify_most_common_word(article_text)
-    print(f"Most common word: {common_word}")
-
-    # Average word length
-    avg_length = calculate_average_word_length(article_text)
-    print(f"Average word length: {avg_length:.2f}")
-
-    # Paragraph count
-    paragraphs = count_paragraphs(article_text)
-    print(f"Number of paragraphs: {paragraphs}")
-
-    # Sentence count
-    sentences = count_sentences(article_text)
-    print(f"Number of sentences: {sentences}")
+    print(f"Most common word: {identify_most_common_word(article_text)}")
+    print(f"Average word length: {calculate_average_word_length(article_text):.2f}")
+    print(f"Number of paragraphs: {count_paragraphs(article_text)}")
+    print(f"Number of sentences: {count_sentences(article_text)}")
 
     print("\nAnalysis Complete.\n")
 
 
+# Ensure functions can be imported by autograder
 if __name__ == "__main__":
     main()
